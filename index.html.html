@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌸 飲食決策終結者 | Cute Meal Selector</title>
+    <style>
+        :root {
+            /* 溫暖少女風色票定義 */
+            --bg-gradient: linear-gradient(135deg, #fff1eb 0%, #ace0f9 100%); /* 柔和粉藍漸層 */
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --primary-pink: #ff9a9e;  /* 主色調粉紅 */
+            --warm-yellow: #fad0c4;   /* 溫暖橘粉 */
+            --soft-blue: #a1c4fd;     /* 柔和寶寶藍 */
+            --text-mocha: #7c5e55;    /* 像摩卡咖啡一樣的深棕色文字 */
+            --border-soft: #fbc2eb;   /* 柔邊框色 */
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Microsoft JhengHei', sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-mocha);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            background: var(--card-bg);
+            padding: 2.5rem 2rem;
+            border-radius: 30px; /* 超圓潤邊角 */
+            box-shadow: 0 20px 40px rgba(255, 154, 158, 0.2); /* 粉色系柔和陰影 */
+            border: 3px solid #fff;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 裝飾性標題 */
+        h1 {
+            color: var(--text-mocha);
+            margin-bottom: 0.5rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+        .header-decoration {
+            font-size: 3rem;
+            margin-bottom: -10px;
+            display: block;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* 區塊樣式 */
+        .section {
+            margin-bottom: 2rem;
+            background: #fff0f5; /* 淡淡的粉色背景區塊 */
+            padding: 20px;
+            border-radius: 20px;
+            border: 2px dashed var(--border-soft); /* 虛線邊框更可愛 */
+            position: relative;
+        }
+        
+        h2 {
+            font-size: 1.3rem;
+            color: var(--primary-pink);
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        h2 .deco-icon { font-size: 1.8rem; }
+
+        /* 輸入框與按鈕群組 */
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            background: #fff;
+            padding: 5px;
+            border-radius: 15px;
+            border: 2px solid var(--border-soft);
+        }
+
+        input {
+            flex: 1;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 12px;
+            outline: none;
+            color: var(--text-mocha);
+            font-size: 1rem;
+        }
+        input::placeholder { color: #d4a5a5; }
+
+        button {
+            cursor: pointer;
+            border: none;
+            border-radius: 12px;
+            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Q彈的動畫效果 */
+            font-weight: bold;
+            font-family: inherit;
+        }
+        button:hover { transform: scale(1.05); }
+        button:active { transform: scale(0.95); }
+
+        .btn-add {
+            background: var(--primary-pink);
+            color: white;
+            padding: 8px 20px;
+            box-shadow: 0 4px 10px rgba(255, 154, 158, 0.4);
+        }
+
+        /* 抽籤大按鈕 */
+        .btn-draw {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.2rem;
+            color: white;
+            margin-top: 15px;
+            border-radius: 18px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        /* 早餐按鈕是溫暖黃 */
+        .btn-draw.bf { background: linear-gradient(to right, #f6d365 0%, #fda085 100%); }
+        /* 午餐按鈕是柔和藍 */
+        .btn-draw.lc { background: linear-gradient(to right, #a1c4fd 0%, #c2e9fb 100%); }
+
+        .btn-draw::after {
+             content: '✨';
+             position: absolute;
+             top: 5px;
+             right: 10px;
+             font-size: 1.5rem;
+             opacity: 0.5;
+        }
+
+        /* 選項列表 */
+        .item-list {
+            list-style: none;
+            padding: 0;
+            max-height: 120px;
+            overflow-y: auto;
+            text-align: left;
+        }
+        /* 自訂捲軸樣式 */
+        .item-list::-webkit-scrollbar { width: 6px; }
+        .item-list::-webkit-scrollbar-thumb { background-color: var(--border-soft); border-radius: 10px; }
+
+        .item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            margin-bottom: 8px;
+            background: #fff;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            box-shadow: 0 2px 5px rgba(255, 194, 203, 0.2);
+        }
+
+        .btn-del {
+            color: #ff6b6b;
+            background: #fff0f0;
+            padding: 5px 10px;
+            font-size: 0.8rem;
+            border-radius: 8px;
+        }
+        .btn-del:hover { background: #ffdbdb; }
+
+        /* 抽籤結果顯示區 */
+        #result-overlay {
+            min-height: 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--text-mocha);
+            background: #fff9c4; /* 淡黃色底 */
+            padding: 15px;
+            border-radius: 20px;
+            margin-bottom: 25px;
+            border: 3px dotted #f6d365;
+            box-shadow: inset 0 0 20px rgba(246, 211, 101, 0.2);
+        }
+
+        /* 漂浮動畫 */
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(2deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <span class="header-decoration">🍱🍮🍓🥞</span>
+    <h1>🌸 今天吃什麼喲？</h1>
+    
+    <div id="result-overlay">✨ 點擊下方按鈕開始抽籤 ✨</div>
+
+    <div class="section">
+        <h2><span class="deco-icon">🍞</span> Morning 早餐時光</h2>
+        <div class="input-group">
+            <input type="text" id="bf-input" placeholder="輸入想吃的早餐...">
+            <button class="btn-add" onclick="addItem('breakfast')">＋加入</button>
+        </div>
+        <ul id="breakfast-list" class="item-list"></ul>
+        <button class="btn-draw bf" onclick="draw('breakfast')">抽出元氣早餐！</button>
+    </div>
+
+    <div class="section">
+        <h2><span class="deco-icon">🍛</span> Lunch 美味午餐</h2>
+        <div class="input-group">
+            <input type="text" id="lc-input" placeholder="輸入外送餐廳...">
+            <button class="btn-add" onclick="addItem('lunch')">＋加入</button>
+        </div>
+        <ul id="lunch-list" class="item-list"></ul>
+        <button class="btn-draw lc" onclick="draw('lunch')">抽出療癒午餐！</button>
+    </div>
+</div>
+
+<script>
+    // --- JavaScript 功能邏輯保持不變，因為它已經很完美了 ---
+    let data = JSON.parse(localStorage.getItem('mealDataCuteVersion')) || {
+        breakfast: ['巷口鐵板麵 🍝', '起司蛋餅 🧀', '充滿活力的飯糰 🍙', '草莓吐司 🍓'],
+        lunch: ['健康波奇碗 🥗', '罪惡炸雞餐 🍗', '暖暖湯麵 🍜', '韓式拌飯 🍚']
+    };
+
+    function render() {
+        ['breakfast', 'lunch'].forEach(type => {
+            const list = document.getElementById(`${type}-list`);
+            list.innerHTML = data[type].map((item, i) => `
+                <li class="item">
+                    <span>🎀 ${item}</span>
+                    <button class="btn-del" onclick="delItem('${type}', ${i})">✖ 刪除</button>
+                </li>
+            `).join('');
+        });
+        // 使用新的 key 避免與舊版衝突，並加入一點預設的可愛選項
+        localStorage.setItem('mealDataCuteVersion', JSON.stringify(data));
+    }
+
+    function addItem(type) {
+        const input = document.getElementById(type === 'breakfast' ? 'bf-input' : 'lc-input');
+        if (input.value.trim()) {
+            // 自動在新增的選項後面加上一點裝飾
+            data[type].push(input.value.trim());
+            input.value = '';
+            render();
+        }
+    }
+
+    function delItem(type, index) {
+        data[type].splice(index, 1);
+        render();
+    }
+
+    function draw(type) {
+        const resultDiv = document.getElementById('result-overlay');
+        const options = data[type];
+        if (options.length === 0) {
+            resultDiv.innerHTML = "🐷 哎呀！請先加入一些選項喔！";
+            return;
+        }
+        
+        let count = 0;
+        resultDiv.style.color = "var(--primary-pink)";
+        const spin = setInterval(() => {
+            resultDiv.innerText = options[Math.floor(Math.random() * options.length)];
+            count++;
+            if (count > 12) { // 稍微轉久一點點增加期待感
+                clearInterval(spin);
+                const final = options[Math.floor(Math.random() * options.length)];
+                // 結果出來時的可愛樣式
+                resultDiv.innerHTML = `🎉 決定就是你了！<br><span style="font-size:1.8rem; color:#ff6b6b;">${final}</span>`;
+                // 簡單的慶祝動畫
+                resultDiv.animate([
+                    { transform: 'scale(0.9)' }, { transform: 'scale(1.1)' }, { transform: 'scale(1)' }
+                ], { duration: 300 });
+            }
+        }, 60);
+    }
+
+    // 初始化渲染
+    render();
+</script>
+</body>
+</html>
